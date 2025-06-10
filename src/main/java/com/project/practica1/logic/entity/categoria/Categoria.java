@@ -1,6 +1,6 @@
 package com.project.practica1.logic.entity.categoria;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.practica1.logic.entity.producto.Producto;
 import jakarta.persistence.*;
 
@@ -17,8 +17,11 @@ public class Categoria {
     private String nombre;
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Producto> productos;
+
+
 
     public Categoria() {
     }
