@@ -34,30 +34,47 @@ public class CategoriaRestController {
             HttpServletRequest request) {
 
         Pageable pageable = PageRequest.of(page-1, size);
-        Page<Categoria> ordersPage = categoriaRepository.findAll(pageable);
+        Page<Categoria> categoriasPage = categoriaRepository.findAll(pageable);
         Meta meta = new Meta(request.getMethod(), request.getRequestURL().toString());
-        meta.setTotalPages(ordersPage.getTotalPages());
-        meta.setTotalElements(ordersPage.getTotalElements());
-        meta.setPageNumber(ordersPage.getNumber() + 1);
-        meta.setPageSize(ordersPage.getSize());
+        meta.setTotalPages(categoriasPage.getTotalPages());
+        meta.setTotalElements(categoriasPage.getTotalElements());
+        meta.setPageNumber(categoriasPage.getNumber() + 1);
+        meta.setPageSize(categoriasPage.getSize());
 
-        return new GlobalResponseHandler().handleResponse("Categories retrieved successfully",
-                ordersPage.getContent(), HttpStatus.OK, meta);
+        return new GlobalResponseHandler().handleResponse("Categorias devueltas exitosamente",
+                categoriasPage.getContent(), HttpStatus.OK, meta);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getCategoriaById(@PathVariable Long id, HttpServletRequest request) {
+        Optional<Categoria> foundCategoria = categoriaRepository.findById(id);
+        if (foundCategoria.isPresent()) {
+            return new GlobalResponseHandler().handleResponse("Categoria devuelta exitosamente",
+                    foundCategoria.get(), HttpStatus.OK, request);
+        } else {
+            return new GlobalResponseHandler().handleResponse("Categoria con id " + id + " no encontrada",
+                    HttpStatus.NOT_FOUND, request);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
-    public Categoria updateCategoria(@PathVariable Long id, @RequestBody Categoria categoria) {
-        return categoriaRepository.findById(id)
-                .map(existingCategory -> {
-                    existingCategory.setNombre(categoria.getNombre());
-                    existingCategory.setDescripcion(categoria.getDescripcion());
-                    return categoriaRepository.save(existingCategory);
-                })
-                .orElseGet(() -> {
-                    categoria.setId(id);
-                    return categoriaRepository.save(categoria);
-                });
+    public ResponseEntity<?> updateCategoriaById(@PathVariable Long id, @RequestBody Categoria categoria, HttpServletRequest request) {
+        Optional<Categoria> foundCategoria = categoriaRepository.findById(id);
+        if(foundCategoria.isPresent()) {
+            Categoria existingCategoria = foundCategoria.get();
+
+            existingCategoria.setNombre(categoria.getNombre());
+            existingCategoria.setDescripcion(categoria.getDescripcion());
+
+            categoriaRepository.save(existingCategoria);
+            return new GlobalResponseHandler().handleResponse("Categoria actualizada correctamente",
+                    existingCategoria, HttpStatus.OK, request);
+        } else {
+            return new GlobalResponseHandler().handleResponse("Categoria id " + id + " no encontrada",
+                    HttpStatus.NOT_FOUND, request);
+        }
     }
 
     @PostMapping
@@ -67,7 +84,7 @@ public class CategoriaRestController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
+    @PreAuthorize("hasAuthority('SUPER_ADMIN_ROLE')")
     public ResponseEntity<?> deleteCategoria(@PathVariable Long id, HttpServletRequest request) {
         Optional<Categoria> foundCategoria = categoriaRepository.findById(id);
 

@@ -8,7 +8,6 @@ import com.project.practica1.logic.entity.http.GlobalResponseHandler;
 import com.project.practica1.logic.entity.http.Meta;
 import com.project.practica1.logic.entity.producto.Producto;
 import com.project.practica1.logic.entity.producto.ProductoRepository;
-import com.project.practica1.logic.entity.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,15 +40,15 @@ public class ProductoRestController {
             HttpServletRequest request) {
 
         Pageable pageable = PageRequest.of(page-1, size);
-        Page<Producto> ordersPage = productoRepository.findAll(pageable);
+        Page<Producto> productosPage = productoRepository.findAll(pageable);
         Meta meta = new Meta(request.getMethod(), request.getRequestURL().toString());
-        meta.setTotalPages(ordersPage.getTotalPages());
-        meta.setTotalElements(ordersPage.getTotalElements());
-        meta.setPageNumber(ordersPage.getNumber() + 1);
-        meta.setPageSize(ordersPage.getSize());
+        meta.setTotalPages(productosPage.getTotalPages());
+        meta.setTotalElements(productosPage.getTotalElements());
+        meta.setPageNumber(productosPage.getNumber() + 1);
+        meta.setPageSize(productosPage.getSize());
 
-        return new GlobalResponseHandler().handleResponse("Products retrieved successfully",
-                ordersPage.getContent(), HttpStatus.OK, meta);
+        return new GlobalResponseHandler().handleResponse("Producto devuelto exitosamente",
+                productosPage.getContent(), HttpStatus.OK, meta);
     }
 
     @GetMapping("/{id}")
@@ -57,30 +56,36 @@ public class ProductoRestController {
     public ResponseEntity<?> getProductoById(@PathVariable Long id, HttpServletRequest request) {
         Optional<Producto> foundProducto = productoRepository.findById(id);
         if (foundProducto.isPresent()) {
-            return new GlobalResponseHandler().handleResponse("Product retrieved successfully",
+            return new GlobalResponseHandler().handleResponse("Producto devuelto exitosamente",
                     foundProducto.get(), HttpStatus.OK, request);
         } else {
-            return new GlobalResponseHandler().handleResponse("Product with id " + id + " not found",
+            return new GlobalResponseHandler().handleResponse("Producto con id " + id + " not found",
                     HttpStatus.NOT_FOUND, request);
         }
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-    public Producto updateProducto(@PathVariable Long id, @RequestBody Producto producto) {
-        return productoRepository.findById(id)
-                .map(existingProduct -> {
-                    existingProduct.setNombre(producto.getNombre());
-                    existingProduct.setDescripcion(producto.getDescripcion());
-                    existingProduct.setPrecio(producto.getPrecio());
-                    existingProduct.setCantidad(producto.getCantidad());
-                    return productoRepository.save(existingProduct);
-                })
-                .orElseGet(() -> {
-                    producto.setId(id);
-                    return productoRepository.save(producto);
-                });
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
+    public ResponseEntity<?> updateProductoById(@PathVariable Long id, @RequestBody Producto producto, HttpServletRequest request) {
+        Optional<Producto> foundProducto = productoRepository.findById(id);
+        if(foundProducto.isPresent()) {
+            Producto existingProducto = foundProducto.get();
+
+            existingProducto.setNombre(producto.getNombre());
+            existingProducto.setDescripcion(producto.getDescripcion());
+            existingProducto.setPrecio(producto.getPrecio());
+            existingProducto.setCantidad(producto.getCantidad());
+            existingProducto.setCategoria(producto.getCategoria());
+
+            productoRepository.save(existingProducto);
+            return new GlobalResponseHandler().handleResponse("Producto actualizado correctamente",
+                    existingProducto, HttpStatus.OK, request);
+        } else {
+            return new GlobalResponseHandler().handleResponse("Producto id " + id + " no encontrado",
+                    HttpStatus.NOT_FOUND, request);
+        }
     }
+
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
