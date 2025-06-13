@@ -59,7 +59,7 @@ public class ProductoRestController {
             return new GlobalResponseHandler().handleResponse("Producto devuelto exitosamente",
                     foundProducto.get(), HttpStatus.OK, request);
         } else {
-            return new GlobalResponseHandler().handleResponse("Producto con id " + id + " not found",
+            return new GlobalResponseHandler().handleResponse("Producto con id " + id + " no encontrado",
                     HttpStatus.NOT_FOUND, request);
         }
     }
@@ -86,12 +86,28 @@ public class ProductoRestController {
         }
     }
 
-
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
-    public Producto addProducto(@RequestBody Producto producto) {
-        return  productoRepository.save(producto);
+    public ResponseEntity<?> createProducto(@RequestBody Producto producto, HttpServletRequest request) {
+        if (producto.getCategoria() != null && producto.getCategoria().getId() != null) {
+            Optional<Categoria> foundCategoria = categoriaRepository.findById(producto.getCategoria().getId());
+            if (foundCategoria.isPresent()) {
+                producto.setCategoria(foundCategoria.get());
+            } else {
+                return new GlobalResponseHandler().handleResponse(
+                        "La categoría con id " + producto.getCategoria().getId() + " no existe.",
+                        HttpStatus.BAD_REQUEST, request);
+            }
+        } else {
+            producto.setCategoria(null);
+        }
+
+        Producto savedProducto = productoRepository.save(producto);
+        return new GlobalResponseHandler().handleResponse(
+                "Producto registrado correctamente.",
+                savedProducto, HttpStatus.CREATED, request);
     }
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
@@ -108,7 +124,7 @@ public class ProductoRestController {
             return new GlobalResponseHandler().handleResponse("Producto borrado de forma correcta",
                     foundProducto.get(), HttpStatus.OK, request);
         } else {
-            return new GlobalResponseHandler().handleResponse("Producto id " + id + " not found"  ,
+            return new GlobalResponseHandler().handleResponse("Producto id " + id + " no encontrado"  ,
                     HttpStatus.NOT_FOUND, request);
         }
     }

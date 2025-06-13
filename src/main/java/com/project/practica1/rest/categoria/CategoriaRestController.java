@@ -41,7 +41,7 @@ public class CategoriaRestController {
         meta.setPageNumber(categoriasPage.getNumber() + 1);
         meta.setPageSize(categoriasPage.getSize());
 
-        return new GlobalResponseHandler().handleResponse("Categorias devueltas exitosamente",
+        return new GlobalResponseHandler().handleResponse("Lista de Categorias devuelta exitosamente",
                 categoriasPage.getContent(), HttpStatus.OK, meta);
     }
 
@@ -79,12 +79,24 @@ public class CategoriaRestController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
-    public Categoria addCategoria(@RequestBody Categoria categoria) {
-        return  categoriaRepository.save(categoria);
+    public ResponseEntity<?> crearCategoria(@RequestBody Categoria categoria, HttpServletRequest request) {
+        Optional<Categoria> foundCategoria = categoriaRepository.findByNombre(categoria.getNombre());
+
+        if (foundCategoria.isPresent()) {
+            return new GlobalResponseHandler().handleResponse(
+                    "Ya existe una categoría con el nombre: " + categoria.getNombre(),
+                    HttpStatus.CONFLICT, request);
+        }
+
+        Categoria savedCategoria = categoriaRepository.save(categoria);
+        return new GlobalResponseHandler().handleResponse(
+                "Categoría registrada correctamente.",
+                savedCategoria, HttpStatus.CREATED, request);
     }
 
+
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SUPER_ADMIN_ROLE')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN_ROLE')")
     public ResponseEntity<?> deleteCategoria(@PathVariable Long id, HttpServletRequest request) {
         Optional<Categoria> foundCategoria = categoriaRepository.findById(id);
 

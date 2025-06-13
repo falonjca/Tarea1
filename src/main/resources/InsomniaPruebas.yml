@@ -1,0 +1,397 @@
+type: collection.insomnia.rest/5.0
+name: API productos y categoria
+meta:
+    id: wrk_e776f90b5f6742c38287d0848d120ad9
+    created: 1749307816965
+    modified: 1749516515955
+    description: ""
+collection:
+    - url: "{{ base_url }}/auth/login"
+      name: Login
+      meta:
+          id: req_ddbcc065c3634c1293d186ed753c9d2b
+          created: 1749307816968
+          modified: 1749848687642
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816968
+      method: POST
+      body:
+          mimeType: application/json
+          text: |-
+              {
+                "email": "super.admin@gmail.com",
+                "password": "superadmin123"
+              }
+      headers:
+          - name: Content-Type
+            value: application/json
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/productos"
+      name: Listar Productos
+      meta:
+          id: req_500652896f2e4e70ae18c07cf7ed0b7c
+          created: 1749307816969
+          modified: 1749851024192
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816970.25
+      method: GET
+      headers:
+          - id: pair_1f0ea9b1b8b5475e88bcc3b06fa5e8a3
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/productos"
+      name: Registrar Producto sin categoría
+      meta:
+          id: req_45640b3e2ca44912851f9449c67746d6
+          created: 1749307816970
+          modified: 1749851596223
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816970
+      method: POST
+      body:
+          mimeType: application/json
+          text: |-
+              {
+                "nombre": "Botella",
+                "descripcion": "De vidrio",
+              	 "precio": 8500,
+              	 "cantidad": 5
+              }
+      headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_29ef7c3527474411b8faf9374c580e8a
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+          disabled: false
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/categorias"
+      name: Listar Categorías
+      meta:
+          id: req_46094ef49b794b519e6a031d28c48711
+          created: 1749307816970
+          modified: 1749851025739
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816970.5
+      method: GET
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/categorias"
+      name: Registrar Categoría
+      meta:
+          id: req_dc2d546c686c4885be966b41aa31ef27
+          created: 1749307816970
+          modified: 1749851017510
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816970
+      method: POST
+      body:
+          mimeType: application/json
+          text: |-
+              {
+                "nombre": "Electrónicos",
+                "descripcion": "Poco uso"
+              }
+      headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_11d2f7422c8c4624bab835c921f24d9e
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/categorias/9"
+      name: Actualizar Categoría
+      meta:
+          id: req_0d64624a6ed04b8ba7f16f4d103a2b6d
+          created: 1749307816971
+          modified: 1749847793027
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816971
+      method: PUT
+      body:
+          mimeType: application/json
+          text: |-
+              {
+                "nombre": "Cueros",
+                "descripcion": "Para algunas fajas"
+              }
+      headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_a5056bf2a03b4f94a4fd26dbdd08ba41
+          - id: pair_96d2c7f9cc304f01831c789769b1ea9d
+            name: token
+            value: ""
+            description: ""
+            disabled: false
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/productos/3"
+      name: Actualizar Producto
+      meta:
+          id: req_3f4a8a0cc37b4e14a3512d8786b1dad7
+          created: 1749307816971
+          modified: 1749847790668
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816971
+      method: PUT
+      body:
+          mimeType: application/json
+          text: |
+              {
+                "nombre": "Pescado",
+                "descripcion": "Pargo rojo",
+              	 "precio": 4005,
+              	 "cantidad": 5,
+              	"categoria": { "id": 3}
+              
+              }
+      headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_a2b2ea01fbf545e99c75d139d99ccd42
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/categorias/14"
+      name: Borrar Categoría
+      meta:
+          id: req_2fb2d4e5f2bc4863bbf920cc9783cfc4
+          created: 1749307816972
+          modified: 1749851674973
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816972
+      method: DELETE
+      headers:
+          - id: pair_78f0140d3025426ebe181baf81fa4602
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+      authentication:
+          type: bearer
+          prefix: ""
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ base_url }}/productos/11"
+      name: Borrar Producto
+      meta:
+          id: req_f1fa49dc8cc14290807e7428db7d2185
+          created: 1749307816973
+          modified: 1749851634888
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816973
+      method: DELETE
+      body:
+          mimeType: application/json
+          text: ""
+      headers:
+          - name: Content-Type
+            value: application/json
+          - id: pair_6e851a9050124f53ab96cb2dba1b3205
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ _.base_url }}/productos/3"
+      name: Lista producto ID
+      meta:
+          id: req_79f309c43cad4e56a5e2101ca0865b42
+          created: 1749514718802
+          modified: 1749850504139
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816970.75
+      method: GET
+      headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ _.base_url }}/categorias/2"
+      name: Lista categoria ID
+      meta:
+          id: req_e05d89d325254e80a7a4ac6d4a1bf01c
+          created: 1749604535019
+          modified: 1749850505739
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816970.875
+      method: GET
+      headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+      authentication:
+          type: bearer
+          disabled: false
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+    - url: "{{ _.base_url }}/productos"
+      name: Registrar producto con categoría
+      meta:
+          id: req_6b191ba89d964201adb447c689f7f713
+          created: 1749850260289
+          modified: 1749850985411
+          isPrivate: false
+          description: ""
+          sortKey: -1749307816969.5
+      method: POST
+      body:
+          mimeType: application/json
+          text: |-
+              {
+                "nombre": "Audífonos",
+                "descripcion": "Alámbricos",
+              	 "precio": 10500,
+              	 "cantidad": 4,
+               "categoria": { "id": "1"}
+              }
+      headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.2.0
+      authentication:
+          type: bearer
+          token: "{% response 'body', 'req_ddbcc065c3634c1293d186ed753c9d2b',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+              send: true
+              store: true
+          rebuildPath: true
+cookieJar:
+    name: Default Jar
+    meta:
+        id: jar_1702c27828291fe99397b079b48a030be771714e
+        created: 1749307822216
+        modified: 1749307822216
+environments:
+    name: Base Environment
+    meta:
+        id: env_0643209d12404a19a574c072d0972b8b
+        created: 1749307816967
+        modified: 1749307816967
+        isPrivate: false
+    data:
+        base_url: http://localhost:8080
+        jwt_token: ""
+
